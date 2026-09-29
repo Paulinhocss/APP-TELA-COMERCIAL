@@ -1,0 +1,22 @@
+// Adaptador temporario da logica homologada anterior.
+// Novas alteracoes devem migrar para componentes/hooks React tipados.
+// @ts-nocheck
+export function initHomologacao() {
+
+const $=id=>document.getElementById(id);
+const brl=v=>Number(v||0).toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const num=v=>Number(v||0).toLocaleString('pt-BR',{maximumFractionDigits:6});
+const pct=v=>Number(v||0).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:3})+'%';
+function numero(){return $('numero').value.trim()}
+function msg(t,c=''){ $('msg').className='message '+c; $('msg').textContent=t }
+async function api(url,opt){const r=await fetch(url,opt);const d=await r.json().catch(()=>({}));if(!r.ok)throw new Error(d.erro||'Erro '+r.status);return d}
+function renderDeak(d){const o=d.orcamento,items=d.itens||[];$('m-num').textContent=o.CodOrcamento_ID;$('m-itens').textContent=items.length;$('m-total').textContent=brl(o.VlrTotal);$('m-margem').textContent=pct(o.Margem);$('m-icms').textContent=brl(o.VlrICMS);$('m-piscofins').textContent=brl(Number(o.VlrPIS||0)+Number(o.VlrCOFINS||0));$('cab').textContent=`CNPJ ${o.CGC} · Filial ${o.Filial} · Vendedor ${o.CodVendedor_ID} · Atendente ${o.VendedorExt}`;$('itens').innerHTML=items.map(i=>`<tr><td>${i.NItem}</td><td class="code-cell"><strong>${i.CodProduto_ID}</strong></td><td class="desc-cell">${i.DescricaoProduto||'—'}</td><td class="fab-cell"><strong>${i.NomeFabricante||i.CodFabricante_ID||'—'}</strong><span class="ref">Cód. ${i.CodFabricante_ID||'—'}${i.RefFabricante!=null&&String(i.RefFabricante).trim()!==''?' · Ref. '+i.RefFabricante:''}</span></td><td>${i.UnidadeMedida_ID||''}</td><td>${num(i.Quantidade)}</td><td>${num(i.PrecoUnitario)}</td><td>${brl(i.PrecoTotal)}</td><td>${brl(i.PrecoDesconto)}</td><td>${pct(i.PorcDesconto)}</td><td>${num(i.PrecoCusto)}</td><td>${pct(i.Margem)}</td><td>${i.NOper||''}</td><td>${i.CodTributo||''}</td><td>${brl(i.VlrICMS)}</td><td>${brl(i.VlrPIS)}</td><td>${brl(i.VlrCOFINS)}</td></tr>`).join('')}
+async function buscarDeak(){try{msg('Consultando...');const d=await api('/api/deak/'+encodeURIComponent(numero()));renderDeak(d);msg('Orçamento carregado do Deak.','ok')}catch(e){msg(e.message,'bad')}}
+async function importarTeste(substituir){try{msg('Copiando para as tabelas TESTE...');const q=substituir?'?substituir=1':'';await api('/api/teste/importar/'+encodeURIComponent(numero())+q,{method:'POST'});msg('Orçamento copiado para TESTE. Agora clique em Comparar.','ok')}catch(e){if(e.message.includes('já foi importado')){if(confirm(e.message+'\n\nDeseja substituir a cópia de teste?'))return importarTeste(true)}msg(e.message,'bad')}}
+function line(c){return `<div class="compare-line"><span>${c.campo}</span><strong>${typeof c.deak==='number'?num(c.deak):c.deak??'—'}</strong><strong>${typeof c.teste==='number'?num(c.teste):c.teste??'—'}</strong><strong class="${c.ok?'ok':'bad'}">${c.ok?'✓':'✕'}</strong></div>`}
+async function comparar(){try{msg('Comparando...');const d=await api('/api/comparar/'+encodeURIComponent(numero()));$('compareCard').style.display='block';$('compareStatus').textContent=d.ok?'✅ HOMOLOGADO':'⚠️ DIVERGÊNCIA';$('compareStatus').className=d.ok?'ok':'bad';$('compResumo').innerHTML='<div class="small" style="margin-bottom:8px">RESUMO · Deak / TESTE</div>'+d.resumo.map(line).join('');$('compItens').innerHTML='<div class="small" style="margin-bottom:8px">ITENS</div>'+d.itens.map(i=>`<div class="compare-line"><span>Item ${i.NItem} · ${i.produto}/${i.fabricante}</span><strong>${i.checks?.length||0} campos</strong><strong>${i.ok?'igual':'divergente'}</strong><strong class="${i.ok?'ok':'bad'}">${i.ok?'✓':'✕'}</strong></div>`).join('');msg(d.ok?'Comparação concluída sem divergências.':'Há divergências para revisar.',d.ok?'ok':'warn')}catch(e){msg(e.message,'bad')}}
+async function limparTeste(){if(!confirm('Excluir a cópia TESTE deste orçamento? Nada será apagado no Deak.'))return;try{await api('/api/teste/'+encodeURIComponent(numero()),{method:'DELETE'});$('compareCard').style.display='none';msg('Cópia TESTE removida. O Deak não foi alterado.','ok')}catch(e){msg(e.message,'bad')}}
+window.addEventListener('load',async()=>{try{const h=await api('/api/health');msg('SQL conectado ao banco '+h.sql.banco+'.','ok');await buscarDeak()}catch(e){msg('Falha na conexão: '+e.message,'bad')}})
+
+Object.assign(window as any, { numero, msg, api, renderDeak, buscarDeak, importarTeste, line, comparar, limparTeste });
+}
