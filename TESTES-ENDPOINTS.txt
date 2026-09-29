@@ -1,0 +1,10 @@
+GET  http://localhost:3010/api/health
+GET  http://localhost:3010/api/deak/809620
+GET  http://localhost:3010/api/estoque/475/00025
+POST http://localhost:3010/api/teste/importar/809620
+GET  http://localhost:3010/api/teste/809620
+GET  http://localhost:3010/api/comparar/809620
+DELETE http://localhost:3010/api/teste/809620
+
+Para substituir uma cópia TESTE existente:
+POST http://localhost:3010/api/teste/importar/809620?substituir=1

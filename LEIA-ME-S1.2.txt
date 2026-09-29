@@ -1,0 +1,34 @@
+APP TELA COMERCIAL - S1.2
+Solicitação -> Produto -> Fabricante -> Estoque -> Condição comercial -> Orçamento TESTE
+
+INSTALAÇÃO
+1) Pare o Node com Ctrl+C.
+2) Substitua somente:
+   - server.js
+   - public\solicitacao.html
+3) NÃO altere .env, package.json ou node_modules.
+4) Rode iniciar.bat novamente.
+5) Acesse http://localhost:3010/solicitacao
+
+NÃO HÁ SQL NOVO NESTE SPRINT.
+
+O QUE MUDOU
+- Ao selecionar o fabricante, aparece a última referência comercial encontrada para produto+fabricante.
+- Essa referência vem de orçamento anterior e é APENAS REFERÊNCIA HISTÓRICA, não é tratada como preço vigente do Deak.
+- O vendedor confirma/edita o preço e desconto na própria linha.
+- A linha calcula preço negociado, total lista e total negociado.
+- Quando todas as linhas estiverem prontas, o botão "Criar orçamento TESTE" é liberado.
+- A gravação acontece SOMENTE em:
+  Aplicativo_ComercialOrcamentoTeste
+  Aplicativo_ComercialOrcamentoItemTeste
+  Aplicativo_ComercialOrcamentoLogTeste
+- Nenhum INSERT/UPDATE/DELETE é feito em deak.dbo.ORCAMENTO ou deak.dbo.ORCAMENTOITEM.
+
+NUMERAÇÃO TESTE
+- O rascunho recebe NumeroTeste = 900000000 + Id da tabela TESTE.
+- Isso mantém a numeração separada da numeração real do Deak.
+
+IMPORTANTE
+Ainda NÃO estamos reproduzindo o motor fiscal/margem do Deak.
+O preço histórico serve para acelerar a homologação da experiência comercial.
+Margem, tributação e preço vigente serão homologados no próximo bloco antes de qualquer gravação real no Deak.

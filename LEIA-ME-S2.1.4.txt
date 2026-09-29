@@ -1,0 +1,32 @@
+S2.1.4 — EDITOR DO ITEM + GRADE DO ORÇAMENTO
+APP TELA COMERCIAL / Vanguard One
+
+OBJETIVO
+- separar item em edição de item já anexado ao orçamento;
+- ao confirmar, anexar o item à grade inferior;
+- recalcular os totais usando somente os itens anexados;
+- bloquear edição acidental depois da confirmação;
+- permitir Editar/Remover um item já anexado;
+- criar orçamento TESTE usando somente a grade confirmada.
+
+BASE TÉCNICA
+O log real do Deak mostra: cmdConfirma → fecha FrmAnexa → Recalcula_Totais_Orcamento → Carregar_grdOrcamento.
+Este sprint reproduz esse fluxo na UX do Vanguard sem copiar a interface antiga.
+
+INSTALAÇÃO
+1. Pare o Node (Ctrl+C).
+2. Substitua somente: public\solicitacao.html
+3. NÃO há SQL novo.
+4. NÃO substitua server.js, .env, package.json ou node_modules.
+5. Inicie novamente e use Ctrl+F5.
+
+TESTE
+1. Configure produto + fabricante + filial + quantidade + preço.
+2. Clique "Adicionar ao orçamento".
+3. Confirme que a linha fica bloqueada e entra na grade.
+4. Adicione um segundo item e confira a soma.
+5. Clique "Editar" na grade: o item deve sair da grade e voltar a ficar editável.
+6. Reconfirme e então crie o orçamento TESTE.
+
+SEGURANÇA
+Continua SEM INSERT/UPDATE/DELETE em deak.dbo.Orcamento e deak.dbo.OrcamentoItem.

@@ -1,0 +1,34 @@
+S2.2A — ALÇADA COMERCIAL EM MODO DIAGNÓSTICO
+APP TELA COMERCIAL / Vanguard One
+
+OBJETIVO
+- ler UsuarioLimites (Markup / Markup Min) do Deak;
+- ler ProdutoFabrica.MargemMinima;
+- estimar a margem resultante do preço negociado usando o mesmo escopo do motor S2.1;
+- mostrar "dentro da alçada" ou "análise provável" SEM bloquear o vendedor nesta etapa.
+
+INSTALAÇÃO
+1. Pare o Node (Ctrl+C).
+2. Execute 01_EXECUTAR_NO_SQL.sql no banco aplicacoes.
+3. Substitua server.js.
+4. Substitua public\solicitacao.html.
+5. NÃO altere .env, package.json ou node_modules.
+6. Inicie novamente e pressione Ctrl+F5.
+
+TESTE RECOMENDADO
+- No campo Vendedor / usuário Deak da alçada, informe ANDERSON C.
+- Produto 449 / fabricante 00025: deve ler Margem mínima 10%, Markup 10P e Markup Min 1P.
+- Com preço sem desconto, a margem estimada deve ficar próxima da margem base e indicar dentro da alçada.
+- Aumente o desconto aos poucos. O card S2.2A recalcula a margem e o piso diagnóstico em tempo real.
+- O botão Adicionar ao orçamento continua habilitado mesmo se aparecer "análise provável", pois ainda estamos homologando a interpretação da regra.
+
+IMPORTANTE
+A hipótese usada no diagnóstico é:
+- piso por Markup = margem base da LP - limite Markup (P);
+- se MargemMinima > 0: piso por Markup Min = MargemMinima - limite Markup Min (P);
+- piso diagnóstico = maior dos pisos aplicáveis.
+
+Essa interpretação é coerente com os dados encontrados, mas ainda precisa ser confrontada com um caso real do Deak que gere pendência. Só depois disso ela poderá bloquear/encaminhar automaticamente.
+
+SEGURANÇA
+Sem INSERT/UPDATE/DELETE em deak.dbo.Orcamento ou deak.dbo.OrcamentoItem.

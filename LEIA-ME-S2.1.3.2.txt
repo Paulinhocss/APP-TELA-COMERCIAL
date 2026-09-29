@@ -1,0 +1,12 @@
+S2.1.3.2 — Preview correto da conversão na seleção de estoque
+
+Correção:
+- antes de selecionar definitivamente o fabricante/filial, os cards de estoque agora calculam a quantidade conforme a apresentação daquele fabricante;
+- ROLO_FIXO: mostra, por exemplo, 8 rolos = 800 MT e valida o estoque contra 800 MT;
+- BOBINA_CORTE: mostra "Metragem a informar" até o vendedor selecionar a filial e informar o corte;
+- BLISTER/UNIDADE: mantém quantidade direta em PC.
+
+Instalação:
+- substituir somente public/solicitacao.html
+- não há SQL novo
+- não é necessário substituir server.js se o S2.1.3.1 Parser Flexível já estiver instalado

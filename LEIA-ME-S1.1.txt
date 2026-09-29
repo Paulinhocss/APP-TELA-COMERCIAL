@@ -1,0 +1,16 @@
+SPRINT S1.1 - COR EXATA + FABRICANTES COM ESTOQUE
+
+Objetivo:
+1) impedir que uma solicitação "Branco" seja pré-selecionada como produto "AZ/Azul";
+2) deixar fabricantes com estoque líquido visíveis primeiro;
+3) ocultar fabricantes zerados por padrão, com opção de exibi-los;
+4) quando não houver correspondência segura, exigir conferência manual do produto.
+
+NÃO HÁ SQL NOVO NESTE PATCH.
+
+Instalação:
+1. Ctrl+C no Node.
+2. Substitua server.js.
+3. Substitua public/solicitacao.html.
+4. Rode iniciar novamente.
+5. Abra http://localhost:3010/solicitacao e interprete novamente.

@@ -1,0 +1,36 @@
+APP TELA COMERCIAL · S1.3 — FILIAL DE ORIGEM DO ESTOQUE
+
+O que muda
+-----------
+1. O vendedor continua escolhendo produto e fabricante.
+2. Ao abrir o fabricante, cada card de Filial passa a ser selecionável.
+3. A linha só fica "Pronta" depois de escolher a filial de origem do estoque.
+4. A aplicação mostra estoque líquido da filial e saldo estimado após a quantidade solicitada.
+5. Se a quantidade superar o estoque líquido da filial, a linha fica "Estoque insuficiente" e o orçamento TESTE não é liberado.
+6. Na gravação, o backend consulta novamente a view de estoque. Ou seja: não confia apenas no valor exibido no navegador.
+7. O item TESTE guarda EmpresaEstoque, FilialEstoque, EstoqueFisico e EstoqueLiquido (fotografia no momento da gravação).
+
+Instalação
+----------
+1. Execute 01_EXECUTAR_NO_SQL.sql no banco aplicacoes.
+2. Pare o Node com Ctrl+C.
+3. Substitua server.js.
+4. Substitua public\solicitacao.html.
+5. NÃO altere .env, package.json ou node_modules.
+6. Rode iniciar novamente.
+7. Abra http://localhost:3010/solicitacao
+
+Teste recomendado
+-----------------
+- Escolha um produto.
+- Abra COBRECOM (ou outro fabricante com estoque).
+- Clique em "Usar estoque desta filial" na Filial 01 ou Filial 04.
+- Confirme que a linha mostra "Origem do estoque: Filial XX".
+- Troque a quantidade para valor superior ao estoque da filial e confirme o status "Estoque insuficiente".
+- Retorne a uma quantidade válida, confirme o preço e crie o orçamento TESTE.
+- Abra o JSON do TESTE e confira EmpresaEstoque/FilialEstoque/EstoqueFisico/EstoqueLiquido no item.
+
+Importante
+----------
+Ainda não há baixa, reserva ou movimentação de estoque real. Esta versão apenas registra a ORIGEM ESCOLHIDA no ambiente TESTE.
+Se no futuro quisermos atender um único item dividindo quantidades entre duas filiais, faremos uma etapa própria de "rateio por filial".

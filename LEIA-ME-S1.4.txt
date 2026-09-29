@@ -1,0 +1,20 @@
+APP TELA COMERCIAL · S1.4
+Correção crítica de compatibilidade de bitola/cor
+
+O que foi corrigido
+- 6 mm não pode mais casar com 16 mm.
+- Branco passa a reconhecer também a abreviação BC do cadastro.
+- Quando existem produtos da bitola exata, itens de outras bitolas nem aparecem nas sugestões.
+- A criação do orçamento TESTE valida novamente no backend a bitola/cor do produto selecionado.
+- Se houver incompatibilidade, o orçamento TESTE é bloqueado com mensagem clara.
+
+Instalação
+1. Pare o Node com Ctrl+C.
+2. Substitua server.js.
+3. Substitua public\solicitacao.html.
+4. Não há SQL novo.
+5. Rode iniciar novamente.
+6. Clique novamente em Interpretar e localizar produtos para recalcular as sugestões.
+
+Atenção
+Após atualizar, refaça a interpretação da solicitação. As sugestões antigas já carregadas no navegador não são reaproveitadas.

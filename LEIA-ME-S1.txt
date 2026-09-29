@@ -1,0 +1,34 @@
+APP TELA COMERCIAL · S1 · SOLICITAÇÃO + FORNECEDORES + ESTOQUE
+
+O QUE ESTE PATCH FAZ
+- mantém a tela de homologação do orçamento 809620;
+- adiciona /solicitacao;
+- cola a solicitação recebida por WhatsApp/e-mail;
+- interpreta categoria, bitola, cor e quantidade;
+- procura produtos no catálogo do Deak;
+- agrupa por CodProduto_ID;
+- mostra na MESMA LINHA os fabricantes/fornecedores cadastrados para o produto;
+- ao clicar no fabricante, mostra Físico, VNDS, EXPE e Líquido por filial;
+- permite marcar qual fabricante será usado.
+
+SEGURANÇA
+- não grava ORCAMENTO;
+- não grava ORCAMENTOITEM;
+- nesta etapa a nova tela é somente leitura do catálogo/estoque e seleção em memória no navegador.
+
+INSTALAÇÃO
+1) Execute 01_EXECUTAR_NO_SQL.sql no banco aplicacoes.
+2) Pare o Node com Ctrl+C.
+3) Substitua server.js.
+4) Substitua public/index.html.
+5) Copie public/solicitacao.html.
+6) Não substitua .env, package.json ou node_modules.
+7) Execute iniciar.bat novamente.
+8) Abra http://localhost:3010/solicitacao
+
+PRIMEIRO TESTE
+Use o texto que já vem preenchido na tela e clique em:
+Interpretar e localizar produtos
+
+O esperado é obter 13 linhas e 57 unidades.
+Depois clique em um fabricante na mesma linha para abrir os saldos por filial.

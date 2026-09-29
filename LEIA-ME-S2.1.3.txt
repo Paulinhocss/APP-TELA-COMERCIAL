@@ -1,0 +1,48 @@
+APP TELA COMERCIAL / Vanguard One
+S2.1.3 — Unidade comercial, embalagem fixa e corte
+
+OBJETIVO
+Corrigir a diferença entre a quantidade pedida pelo cliente e a unidade real usada pelo Deak para estoque/preço.
+
+REGRAS DESTA VERSÃO
+1) ROLO FIXO
+   Ex.: CABO ... (ROLO 100M)
+   - vendedor informa quantidade de rolos;
+   - fator vem de ProdutoFabrica.QtdeUnidade;
+   - 8 rolos x 100 = 800 MT no Deak/estoque;
+   - preço continua sendo por MT;
+   - a tela também mostra o valor aproximado por rolo.
+
+2) BOBINA / CORTE
+   Ex.: CABO ... (BOBINA)
+   - a quantidade original do texto fica apenas como referência;
+   - o vendedor precisa informar quantos metros serão cortados;
+   - quantidade Deak/estoque = metros informados.
+
+3) BLISTER / UNIDADE
+   - venda direta em PC;
+   - QtdeUnidade NÃO é usada como multiplicador automático.
+
+4) DEMAIS PRODUTOS
+   - MT: quantidade direta em metros;
+   - outras unidades: quantidade direta na UnidadeMedidaVnds.
+
+INSTALAÇÃO
+1. Execute 01_EXECUTAR_NO_SQL.sql no banco aplicacoes.
+2. Pare o Node (Ctrl+C).
+3. Substitua server.js.
+4. Substitua public\solicitacao.html.
+5. Não altere .env, package.json ou node_modules.
+6. Inicie novamente e faça Ctrl+F5.
+
+TESTE-OURO 809782
+Solicitação original de fios: 13 linhas / 57 rolos.
+Para fabricante 00025:
+- 8 rolos -> 800 MT
+- 5 rolos -> 500 MT
+- 6 rolos -> 600 MT
+- 3 rolos -> 300 MT
+- 2 rolos -> 200 MT
+
+SEGURANÇA
+O backend consulta novamente a apresentação real no Deak antes da gravação TESTE e recalcula a quantidade Deak. Continua sem INSERT/UPDATE/DELETE em deak.dbo.Orcamento ou deak.dbo.OrcamentoItem.
