@@ -1,6 +1,8 @@
-import { useState, type FormEvent } from "react";
+import { useRef, useState, type FormEvent } from "react";
 import { apiComercial } from "./api";
-import { etapas, type AnaliseSolicitacao, type IdEtapa } from "./tipos";
+import { etapas, type AnaliseSolicitacao, type IdEtapa, type LinhaComercial } from "./tipos";
+import { PainelCatalogo, PainelEstoque } from "./PainelCatalogo";
+import { prepararLinhas, quantidadeInicial, situacaoEstoque } from "./catalogo";
 import "./estrutura.css";
 
 const numero = (valor: number) => new Intl.NumberFormat("pt-BR", { maximumFractionDigits: 3 }).format(valor);
@@ -10,6 +12,8 @@ export function PaginaEstruturaComercial() {
   const [texto, definirTexto] = useState("");
   const [filial, definirFilial] = useState("01");
   const [analise, definirAnalise] = useState<AnaliseSolicitacao | null>(null);
+  const [linhas, definirLinhas] = useState<LinhaComercial[]>([]);
+  const versaoAnalise = useRef(0);
   const [carregando, definirCarregando] = useState(false);
   const [erro, definirErro] = useState("");
   const atual = etapas.find(item => item.id === etapa)!;
@@ -19,15 +23,88 @@ export function PaginaEstruturaComercial() {
     if (!texto.trim() || carregando) return;
     definirErro("");
     definirCarregando(true);
+    const versao = ++versaoAnalise.current;
     try {
       const resultado = await apiComercial.analisarSolicitacao(texto, filial);
+      if (versao !== versaoAnalise.current) return;
       definirAnalise(resultado);
+      definirLinhas(prepararLinhas(resultado.itens));
       definirEtapa("catalogo");
     } catch (causa) {
-      definirErro(causa instanceof Error ? causa.message : "Não foi possível interpretar a solicitação.");
+      if (versao === versaoAnalise.current) {
+        definirErro(causa instanceof Error ? causa.message : "Não foi possível interpretar a solicitação.");
+      }
     } finally {
-      definirCarregando(false);
+      if (versao === versaoAnalise.current) definirCarregando(false);
     }
+  }
+
+  function escolherProduto(id: string, codigo: string) {
+    const produto = Number(codigo);
+    definirLinhas(atuais => atuais.map(item => {
+      if (String(item.id) !== id) return item;
+      const sugestao = item.sugestoes.find(s => s.CodProduto_ID === produto) || null;
+      return {
+        ...item, produtoSelecionado: sugestao, fornecedores: [],
+        fornecedorSelecionado: null, filialEstoqueSelecionada: null,
+        quantidadeComercial: item.quantidadeSolicitada,
+        consultandoFornecedores: Boolean(sugestao), erroFornecedores: null
+      };
+    }));
+    if (!codigo) return;
+    const versao = versaoAnalise.current;
+    void apiComercial.consultarFabricantes(produto, filial)
+      .then(({ fornecedores }) => {
+        if (versao !== versaoAnalise.current) return;
+        definirLinhas(atuais => atuais.map(item =>
+          String(item.id) === id && item.produtoSelecionado?.CodProduto_ID === produto
+            ? { ...item, fornecedores, consultandoFornecedores: false } : item
+        ));
+      })
+      .catch(causa => {
+        if (versao !== versaoAnalise.current) return;
+        definirLinhas(atuais => atuais.map(item =>
+          String(item.id) === id && item.produtoSelecionado?.CodProduto_ID === produto
+            ? { ...item, consultandoFornecedores: false,
+                erroFornecedores: causa instanceof Error ? causa.message : "Falha ao consultar fabricantes." } : item
+        ));
+      });
+  }
+
+  function escolherFabricante(id: string, codigo: string) {
+    definirLinhas(atuais => atuais.map(item => {
+      if (String(item.id) !== id) return item;
+      const fabricante = item.fornecedores.find(f => f.CodFabricante_ID === codigo);
+      if (!fabricante) return item;
+      return { ...item, fornecedorSelecionado: codigo, filialEstoqueSelecionada: null,
+        quantidadeComercial: quantidadeInicial(item, fabricante.apresentacao) };
+    }));
+  }
+
+  function alterarQuantidade(id: string, quantidade: number | null) {
+    definirLinhas(atuais => atuais.map(item =>
+      String(item.id) === id ? { ...item, quantidadeComercial: quantidade } : item
+    ));
+  }
+
+  function escolherFilial(id: string, filialEstoque: string) {
+    definirLinhas(atuais => atuais.map(item =>
+      String(item.id) === id && item.fornecedores.some(f =>
+        f.CodFabricante_ID === item.fornecedorSelecionado &&
+        f.filiais?.some(e => String(e.Filial) === filialEstoque))
+        ? { ...item, filialEstoqueSelecionada: filialEstoque } : item
+    ));
+  }
+
+  function alterarFilialComercial(proxima: string) {
+    const novaFilial = proxima.trim().slice(0, 2);
+    versaoAnalise.current += 1;
+    definirFilial(novaFilial);
+    definirAnalise(null);
+    definirLinhas([]);
+    definirCarregando(false);
+    definirErro("");
+    definirEtapa("solicitacao");
   }
 
   return (
@@ -59,7 +136,7 @@ export function PaginaEstruturaComercial() {
                 <div className="ec-info">
                   <div><label htmlFor="ec-filial">Filial comercial</label>
                     <input id="ec-filial" value={filial} maxLength={2}
-                      onChange={e => definirFilial(e.target.value)} /></div>
+                      onChange={e => alterarFilialComercial(e.target.value)} /></div>
                   <p>Cole a solicitação recebida pelo vendedor. A interpretação usa a API existente e consulta as views do Deak.</p>
                 </div>
                 <label htmlFor="ec-texto">Solicitação do cliente</label>
@@ -76,31 +153,17 @@ export function PaginaEstruturaComercial() {
               </form>
             ) : etapa === "catalogo" ? (
               analise ? (
-                <div>
-                  <div className="ec-indicadores">
-                    <div><small>Linhas identificadas</small><strong>{analise.resumo.linhasIdentificadas}</strong></div>
-                    <div><small>Quantidade solicitada</small><strong>{numero(analise.resumo.quantidadeTotal)}</strong></div>
-                    <div><small>Sugestão automática</small><strong>{analise.itens.filter(i => i.produtoSelecionado).length}</strong></div>
-                  </div>
-                  <p className="ec-descricao">
-                    Dados reais da consulta. A seleção definitiva dos produtos será migrada
-                    para componentes React controlados, sem substituir as regras homologadas.
-                  </p>
-                  <div className="ec-lista">
-                    {analise.itens.map((item, i) => (
-                      <article key={String(item.id) + "-" + String(i)}>
-                        <div><span>{i + 1}</span><strong>{[item.categoria, item.bitola ? String(item.bitola) + " mm" : "", item.cor].filter(Boolean).join(" · ") || "Item solicitado"}</strong><small>{numero(Number(item.quantidade || 0))} solicitado(s)</small></div>
-                        <div>
-                          {item.produtoSelecionado
-                            ? <><strong>{item.produtoSelecionado.CodProduto_ID} — {item.produtoSelecionado.DescricaoProduto}</strong><small>{(item.fornecedores || []).length} fabricante(s) identificado(s)</small></>
-                            : <small>Produto pendente de conferência</small>}
-                        </div>
-                      </article>
-                    ))}
-                  </div>
-                </div>
+                <PainelCatalogo itens={linhas} onEscolherProduto={escolherProduto}
+                  onEscolherFabricante={escolherFabricante} onAlterarQuantidade={alterarQuantidade} />
               ) : (
                 <div className="ec-pendente"><p>Primeiro interprete uma solicitação.</p><button type="button" onClick={() => definirEtapa("solicitacao")}>Ir para solicitação</button></div>
+              )
+            ) : etapa === "estoque" ? (
+              analise ? (
+                <PainelEstoque itens={linhas} onEscolherFilial={escolherFilial}
+                  onVoltarProdutos={() => definirEtapa("catalogo")} />
+              ) : (
+                <div className="ec-pendente"><p>Primeiro interprete uma solicitação e escolha os fabricantes.</p><button type="button" onClick={() => definirEtapa("solicitacao")}>Ir para solicitação</button></div>
               )
             ) : (
               <div className="ec-pendente">
@@ -117,7 +180,9 @@ export function PaginaEstruturaComercial() {
           <h2>Contexto da operação</h2>
           <dl>
             <div><dt>Filial</dt><dd>{filial || "—"}</dd></div>
-            <div><dt>Solicitação</dt><dd>{analise ? String(analise.itens.length) + " linhas" : "Aguardando"}</dd></div>
+            <div><dt>Solicitação</dt><dd>{analise ? String(linhas.length) + " linhas" : "Aguardando"}</dd></div>
+            <div><dt>Fabricantes escolhidos</dt><dd>{linhas.filter(i => i.fornecedorSelecionado).length}/{linhas.length}</dd></div>
+            <div><dt>Estoque conferido</dt><dd>{linhas.filter(i => situacaoEstoque(i).valido).length}/{linhas.length}</dd></div>
             <div><dt>Banco</dt><dd>Deak (leitura via API)</dd></div>
             <div><dt>Gravação</dt><dd>Desativada nesta estrutura</dd></div>
           </dl>
