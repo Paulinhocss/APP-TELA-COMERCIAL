@@ -6,6 +6,7 @@ interface PropriedadesCatalogo {
   onEscolherProduto: (id: string, produto: string) => void;
   onEscolherFabricante: (id: string, fabricante: string) => void;
   onAlterarQuantidade: (id: string, quantidade: number | null) => void;
+  onAvancarEstoque: () => void;
 }
 
 interface PropriedadesEstoque {
@@ -17,7 +18,7 @@ interface PropriedadesEstoque {
 const rotulo = (item: LinhaComercial) =>
   [item.categoria, item.bitola ? `${item.bitola} mm` : "", item.cor].filter(Boolean).join(" · ") || "Item solicitado";
 
-export function PainelCatalogo({ itens, onEscolherProduto, onEscolherFabricante, onAlterarQuantidade }: PropriedadesCatalogo) {
+export function PainelCatalogo({ itens, onEscolherProduto, onEscolherFabricante, onAlterarQuantidade, onAvancarEstoque }: PropriedadesCatalogo) {
   const escolhidos = itens.filter(item => Boolean(item.fornecedorSelecionado)).length;
   return (
     <div className="ec-catalogo">
@@ -53,6 +54,8 @@ export function PainelCatalogo({ itens, onEscolherProduto, onEscolherFabricante,
                   </option>
                 ))}
               </select>
+              {item.produtoSelecionado?.bitolaCompativel === false && <p className="ec-validacao" role="status">Bitola incompatível com a solicitação. Confira antes de continuar.</p>}
+              {item.produtoSelecionado?.corCompativel === false && <p className="ec-validacao" role="status">Cor incompatível com a solicitação. Confira antes de continuar.</p>}
               {item.consultandoFornecedores && <p className="ec-aviso">Consultando os fabricantes do produto...</p>}
               {item.erroFornecedores && <p role="alert" className="ec-erro">{item.erroFornecedores}</p>}
               {item.produtoSelecionado && !item.consultandoFornecedores && (
@@ -96,6 +99,7 @@ export function PainelCatalogo({ itens, onEscolherProduto, onEscolherFabricante,
           );
         })}
       </div>
+      <div className="ec-acoes"><button type="button" className="ec-acao-secundaria" onClick={onAvancarEstoque}>Conferir estoque por filial</button></div>
     </div>
   );
 }
