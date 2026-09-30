@@ -1,0 +1,35 @@
+
+.estrutura-comercial{min-height:100vh;background:#081623;color:#eef6ff;font-family:Inter,"Segoe UI",Arial,sans-serif;font-size:14px}
+.estrutura-comercial *{box-sizing:border-box}
+.ec-topo{max-width:1780px;margin:0 auto;padding:24px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #27455f;gap:15px}
+.ec-topo div{display:grid;gap:7px}.ec-topo strong{font-size:22px;letter-spacing:.1em}.ec-topo span{color:#94b3ce;font-size:12px}
+.ec-topo a{color:#e0f2ff;text-decoration:none;background:#15314a;border:1px solid #3e6384;padding:10px 14px;border-radius:9px}
+.ec-layout{max-width:1780px;margin:auto;padding:24px;display:grid;grid-template-columns:260px minmax(420px,1fr) 235px;gap:18px;align-items:start}
+.ec-barra,.ec-painel,.ec-resumo{border:1px solid #29485f;background:#0e2133;border-radius:13px}
+.ec-barra{padding:14px}.ec-barra h2{margin:4px 8px 14px;color:#aac6de;font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+.ec-barra nav{display:grid;gap:6px}
+.ec-etapa{display:flex;align-items:flex-start;text-align:left;gap:12px;color:#e7f2fc;background:transparent;border:1px solid transparent;border-radius:9px;padding:12px;cursor:pointer}
+.ec-etapa:hover{background:#18354b}.ec-etapa.selecionada{background:#153b58;border-color:#347db6}
+.ec-etapa>span{color:#7bbcf1;font-weight:800}.ec-etapa div{display:grid;gap:4px}.ec-etapa strong{font-size:13px}.ec-etapa small{color:#98b5cc;line-height:1.4;font-size:10px}
+.ec-titulo{margin:0 0 16px}.ec-titulo small{color:#7ac5f7;text-transform:uppercase;font-weight:700}.ec-titulo h1{font-size:29px;margin:8px 0}.ec-titulo p{color:#9ebbd2;margin:0}
+.ec-painel{padding:23px}
+.ec-form{display:grid;gap:13px}.ec-form label{display:block;color:#c9e1f5;font-size:12px;font-weight:750}
+.ec-form textarea,.ec-form input{width:100%;color:#f3f8ff;background:#081725;border:1px solid #385a77;border-radius:9px;padding:12px;font:inherit;margin-top:6px}
+.ec-form textarea{min-height:240px;resize:vertical;line-height:1.6}
+.ec-info{display:flex;justify-content:space-between;gap:20px;align-items:end}.ec-info div{width:130px}.ec-info p{color:#a0b9ce;font-size:12px;max-width:390px;line-height:1.6}
+.ec-acoes{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.ec-acoes button,.ec-pendente button{padding:11px 15px;border-radius:9px;background:#2e82cf;color:white;border:0;font-weight:700;cursor:pointer}
+.ec-acoes button:disabled{opacity:.5;cursor:not-allowed}.ec-acoes small{color:#a4bdcf}
+.ec-erro{padding:12px;background:#3b1e27;border:1px solid #924552;color:#ffd7db;border-radius:9px}
+.ec-indicadores{display:grid;grid-template-columns:repeat(3,1fr);gap:11px}
+.ec-indicadores div{display:grid;gap:9px;padding:15px;background:#081828;border:1px solid #2e4a60;border-radius:10px}.ec-indicadores small{color:#a3bdd5}.ec-indicadores strong{font-size:24px}
+.ec-descricao{color:#9eb9d1;font-size:12px;line-height:1.6;margin:19px 0}
+.ec-lista{display:grid;gap:9px}.ec-lista article{display:grid;grid-template-columns:1fr 1.3fr;gap:16px;padding:14px;border:1px solid #2a4862;border-radius:10px}
+.ec-lista article>div{display:grid;align-content:start;gap:6px}.ec-lista article span{color:#79bde9;font-weight:800}.ec-lista article strong{font-size:12px;line-height:1.5}.ec-lista article small{font-size:11px;color:#a1bdd3}
+.ec-pendente{padding:32px 15px;text-align:center}.ec-pendente p{color:#9fbbd2;line-height:1.75}
+.ec-etiqueta{border:1px solid #446983;border-radius:30px;padding:6px 10px;color:#a5dbfe;font-size:11px}
+.ec-resumo{padding:19px}.ec-resumo h2{font-size:14px;margin:0 0 22px}.ec-resumo dl{display:grid;gap:16px;margin:0}
+.ec-resumo dl div{display:grid;gap:5px;border-bottom:1px solid #2b455b;padding-bottom:12px}.ec-resumo dt{font-size:10px;color:#94b6d2;text-transform:uppercase}.ec-resumo dd{font-size:13px;font-weight:750;margin:0}
+.ec-resumo p{color:#8cabc7;font-size:11px;line-height:1.7;margin-top:18px}
+@media(max-width:1180px){.ec-layout{grid-template-columns:240px minmax(340px,1fr)}.ec-resumo{grid-column:2}}
+@media(max-width:780px){.ec-topo{flex-direction:column;align-items:flex-start}.ec-layout{grid-template-columns:1fr;padding:14px}.ec-resumo{grid-column:auto}.ec-barra nav{grid-template-columns:repeat(2,minmax(0,1fr))}.ec-lista article{grid-template-columns:1fr}.ec-indicadores{grid-template-columns:1fr 1fr}.ec-info{align-items:stretch;flex-direction:column}.ec-info div{width:100%}}
