@@ -129,12 +129,12 @@ export function PainelEstoque({ itens, onEscolherFilial, onVoltarProdutos }: Pro
                   <label className="ec-rotulo">Selecione a filial de origem</label>
                   <div className="ec-filiais">
                     {(fabricante.filiais || []).map(f => {
-                      const marcado = String(f.Filial) === String(item.filialEstoqueSelecionada);
+                      const marcado = `${f.Empresa}:${f.Filial}` === String(item.filialEstoqueSelecionada);
                       return (
                         <button type="button" key={`${f.Empresa}-${f.Filial}`}
-                          onClick={() => onEscolherFilial(id, String(f.Filial))}
+                          onClick={() => onEscolherFilial(id, `${f.Empresa}:${f.Filial}`)}
                           aria-pressed={marcado} className={"ec-filial" + (marcado ? " ativo" : "")}>
-                          <strong>Filial {f.Filial} {marcado ? " · selecionada" : ""}</strong>
+                          <strong>Empresa {f.Empresa} · Filial {f.Filial} {marcado ? " · selecionada" : ""}</strong>
                           <small>Físico: {numeroComercial(Number(f.EstoqueFisico || 0))}</small>
                           <small>VNDS: {numeroComercial(Number(f.SaldoVNDS || 0))} · EXPE: {numeroComercial(Number(f.SaldoEXPE || 0))}</small>
                           <strong>Líquido: {numeroComercial(Number(f.EstoqueLiquido || 0))}</strong>
