@@ -154,7 +154,8 @@ export function PaginaEstruturaComercial() {
             ) : etapa === "catalogo" ? (
               analise ? (
                 <PainelCatalogo itens={linhas} onEscolherProduto={escolherProduto}
-                  onEscolherFabricante={escolherFabricante} onAlterarQuantidade={alterarQuantidade} />
+                  onEscolherFabricante={escolherFabricante} onAlterarQuantidade={alterarQuantidade}
+                  onAvancarEstoque={() => definirEtapa("estoque")} />
               ) : (
                 <div className="ec-pendente"><p>Primeiro interprete uma solicitação.</p><button type="button" onClick={() => definirEtapa("solicitacao")}>Ir para solicitação</button></div>
               )
