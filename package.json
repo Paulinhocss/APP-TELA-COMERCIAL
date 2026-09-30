@@ -12,7 +12,8 @@
     "start": "tsx src/server/server.ts",
     "typecheck": "tsc --noEmit",
     "check": "npm run typecheck",
-    "preview": "vite preview --host 0.0.0.0"
+    "preview": "vite preview --host 0.0.0.0",
+    "test:catalogo": "node --import tsx --test src/modulos/comercial/catalogo.test.ts"
   },
   "dependencies": {
     "cors": "^2.8.5",
