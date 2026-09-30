@@ -2021,7 +2021,7 @@ app.post('/api/solicitacao/criar-orcamento-teste', async (req, res, next) => {
 // ===== fim S1 =====
 
 
-app.get(['/','/solicitacao'], (req, res, next) => {
+app.get(['/','/solicitacao','/estrutura'], (req, res, next) => {
   const arquivo = path.join(DIST_DIR, 'index.html');
   res.sendFile(arquivo, (err) => {
     if (err) next(new Error('Frontend React ainda nao foi compilado. Execute npm run build ou use npm run dev.'));
