@@ -27,7 +27,7 @@ function linhaComercial(): LinhaComercial {
     fornecedores: [fabricante]
   }]);
   return { ...linha, fornecedorSelecionado: "00001",
-    filialEstoqueSelecionada: "01",
+    filialEstoqueSelecionada: "01:01",
     quantidadeComercial: quantidadeInicial(linha, rolo) };
 }
 
@@ -59,7 +59,7 @@ test("saldo da filial considera o líquido, não apenas o físico", () => {
 });
 
 test("filial insuficiente não pode ser marcada como conferida", () => {
-  const linha = { ...linhaComercial(), filialEstoqueSelecionada: "02" };
+  const linha = { ...linhaComercial(), filialEstoqueSelecionada: "01:02" };
   assert.equal(situacaoEstoque(linha).valido, false);
 });
 
