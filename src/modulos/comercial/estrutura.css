@@ -33,3 +33,34 @@
 .ec-resumo p{color:#8cabc7;font-size:11px;line-height:1.7;margin-top:18px}
 @media(max-width:1180px){.ec-layout{grid-template-columns:240px minmax(340px,1fr)}.ec-resumo{grid-column:2}}
 @media(max-width:780px){.ec-topo{flex-direction:column;align-items:flex-start}.ec-layout{grid-template-columns:1fr;padding:14px}.ec-resumo{grid-column:auto}.ec-barra nav{grid-template-columns:repeat(2,minmax(0,1fr))}.ec-lista article{grid-template-columns:1fr}.ec-indicadores{grid-template-columns:1fr 1fr}.ec-info{align-items:stretch;flex-direction:column}.ec-info div{width:100%}}
+
+/* Catálogo e estoque React — leitura, seleção e conferência sem gravação */
+.ec-catalogo-lista{display:grid;gap:15px}
+.ec-produto{border:1px solid #345473;background:#0a1b2b;border-radius:12px;padding:18px;display:grid;gap:12px}
+.ec-produto-cabecalho{display:flex;justify-content:space-between;align-items:flex-start;gap:15px}
+.ec-produto-cabecalho>div{display:grid;gap:5px}
+.ec-produto-cabecalho small{color:#83bde7;font-size:11px}
+.ec-produto-cabecalho h3{font-size:16px;margin:0;line-height:1.5}
+.ec-produto-cabecalho span{color:#9cbbd4;font-size:11px}
+.ec-chip{flex-shrink:0;display:inline-flex;align-items:center;height:max-content;background:#392c19;color:#ffda93!important;border:1px solid #755d32;border-radius:30px;padding:7px 10px;font-size:10px!important;font-weight:700}
+.ec-chip.conferido{background:#0c342b;color:#94f1cd!important;border-color:#248865}
+.ec-rotulo{font-weight:700;color:#adcde8;font-size:11px}
+.ec-seletor,.ec-apresentacao input{width:100%;min-height:40px;border:1px solid #3a5a75;color:#f1f8ff;border-radius:9px;background:#071929;padding:8px 10px;font:inherit}
+.ec-fabricantes,.ec-filiais{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:9px}
+.ec-fabricante,.ec-filial{text-align:left;display:grid;gap:7px;align-content:start;border:1px solid #335472;color:#eaf5ff;border-radius:10px;background:#112b43;padding:12px;min-height:92px;cursor:pointer;font:inherit}
+.ec-fabricante strong,.ec-filial strong{font-size:12px}
+.ec-fabricante small,.ec-filial small{font-size:10px;line-height:1.45;color:#abc8dc}
+.ec-fabricante:hover,.ec-filial:hover{border-color:#5e9cd4}
+.ec-fabricante.ativo,.ec-filial.ativo{background:#11392f;border-color:#2eb98a;box-shadow:inset 0 0 0 1px #2eb98a}
+.ec-apresentacao{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;background:#0e253a;border:1px solid #345472;border-radius:10px;padding:14px}
+.ec-apresentacao>div{display:grid;gap:6px;align-content:start}
+.ec-apresentacao small,.ec-apresentacao label{font-size:10px;color:#a0bfd9}
+.ec-apresentacao strong{font-size:12px}
+.ec-apresentacao input{margin:0}
+.ec-validacao{grid-column:1/-1;color:#ffd28a;background:#372a1d;border:1px solid #795b34;border-radius:8px;padding:10px;margin:0;font-size:11px;line-height:1.5}
+.ec-validacao.ok{background:#0d3028;border-color:#287f60;color:#a8f5d6}
+.ec-aviso{font-size:11px;color:#afcce1;line-height:1.5;margin:0}
+.ec-acao-secundaria{width:max-content;border:1px solid #477ba3;background:#153956;color:#eef8ff;border-radius:8px;padding:9px 12px;cursor:pointer}
+@media(max-width:1200px){.ec-apresentacao{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:780px){.ec-produto-cabecalho{flex-direction:column}.ec-apresentacao{grid-template-columns:1fr 1fr}}
+@media(max-width:420px){.ec-apresentacao{grid-template-columns:1fr}.ec-fabricantes,.ec-filiais{grid-template-columns:1fr}}
