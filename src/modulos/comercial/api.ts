@@ -27,5 +27,9 @@ export const apiComercial = {
       method: "POST",
       body: JSON.stringify({ texto, filial })
     });
+  },
+  consultarFabricantes(produto: number, filialOrcamento: string): Promise<{ produto: number; fornecedores: import("./tipos").Fabricante[] }> {
+    const parametros = new URLSearchParams({ filial: filialOrcamento });
+    return consultar(`/api/produtos/${encodeURIComponent(String(produto))}/fornecedores?${parametros}`);
   }
 };
