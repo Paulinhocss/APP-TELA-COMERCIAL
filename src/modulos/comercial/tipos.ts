@@ -4,10 +4,51 @@ export interface ProdutoSugerido {
   elegivelAuto?: boolean;
 }
 
+export interface FilialEstoque {
+  Empresa: string;
+  Filial: string;
+  EstoqueFisico: number;
+  SaldoVNDS: number;
+  SaldoEXPE: number;
+  EstoqueLiquido: number;
+}
+
+export interface ApresentacaoProduto {
+  tipo: string;
+  unidadeMedida: string | null;
+  unidadeVenda: string | null;
+  qtdeUnidade: number;
+  qtMinVenda: number;
+  qtMinVendaMultiplo: number;
+  fatorConversao: number;
+  multiploVenda: number;
+}
+
+export interface PrecoAtualBase {
+  lista: string;
+  precoBase: number | null;
+  margemBase: number | null;
+  custoBase: number | null;
+  filialOrcamento: string;
+}
+
 export interface Fabricante {
   CodFabricante_ID: string;
   NomeFabricante?: string;
   estoqueLiquidoTotal?: number;
+  estoqueFisicoTotal?: number;
+  filiais?: FilialEstoque[];
+  apresentacao?: ApresentacaoProduto;
+  precoAtualBase?: PrecoAtualBase | null;
+}
+
+export interface LinhaComercial extends LinhaSolicitacao {
+  fornecedorSelecionado: string | null;
+  filialEstoqueSelecionada: string | null;
+  quantidadeSolicitada: number;
+  quantidadeComercial: number | null;
+  consultandoFornecedores: boolean;
+  erroFornecedores: string | null;
 }
 
 export interface LinhaSolicitacao {
