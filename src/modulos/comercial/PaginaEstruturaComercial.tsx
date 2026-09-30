@@ -91,7 +91,7 @@ export function PaginaEstruturaComercial() {
     definirLinhas(atuais => atuais.map(item =>
       String(item.id) === id && item.fornecedores.some(f =>
         f.CodFabricante_ID === item.fornecedorSelecionado &&
-        f.filiais?.some(e => String(e.Filial) === filialEstoque))
+        f.filiais?.some(e => `${e.Empresa}:${e.Filial}` === filialEstoque))
         ? { ...item, filialEstoqueSelecionada: filialEstoque } : item
     ));
   }
