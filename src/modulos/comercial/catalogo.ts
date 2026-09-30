@@ -23,7 +23,7 @@ export function obterFabricante(item: LinhaComercial): Fabricante | null {
 }
 
 export function obterFilial(item: LinhaComercial): FilialEstoque | null {
-  return obterFabricante(item)?.filiais?.find(f => String(f.Filial) === String(item.filialEstoqueSelecionada)) || null;
+  return obterFabricante(item)?.filiais?.find(f => `${f.Empresa}:${f.Filial}` === String(item.filialEstoqueSelecionada)) || null;
 }
 
 export function quantidadeInicial(item: LinhaComercial, apresentacao: ApresentacaoProduto | undefined): number | null {
