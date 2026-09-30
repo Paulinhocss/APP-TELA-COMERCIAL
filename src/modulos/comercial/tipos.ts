@@ -2,6 +2,9 @@ export interface ProdutoSugerido {
   CodProduto_ID: number;
   DescricaoProduto: string;
   elegivelAuto?: boolean;
+  bitolaCompativel?: boolean;
+  corCompativel?: boolean;
+  score?: number;
 }
 
 export interface FilialEstoque {
