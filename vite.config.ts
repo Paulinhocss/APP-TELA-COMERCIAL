@@ -5,6 +5,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     port: 5173,
+    open: '/solicitacao',
     proxy: { '/api': 'http://localhost:3010' }
   },
   build: { outDir: 'dist' }
